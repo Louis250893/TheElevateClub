@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Elevate Club — Cercle Privé</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+
+  :root{
+    --velvet:#0A0A0A;
+    --gold:#DCCBA4;
+    --gold-soft:#E6D9BC;
+  }
+
+  html,body{
+    height:100%;margin:0;background:var(--velvet);
+    color:var(--gold);font-family:"Georgia", serif;
+    -webkit-font-smoothing:antialiased;
+    opacity:0;animation:fadeIn .8s ease forwards;
+  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:48px 20px;}
+  .card{
+    width:100%;max-width:780px;
+    border:1px solid rgba(220,203,164,.25);
+    background:radial-gradient(1200px 1200px at 50% -10%,rgba(255,255,255,.03),transparent 70%);
+    padding:56px 48px 40px;
+  }
+
+  .seal{display:flex;justify-content:center;margin-bottom:42px;}
+  .seal-ring{
+    position:relative;width:200px;height:200px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold);font-size:60px;letter-spacing:10px;
+  }
+  .seal-ring::before,.seal-ring::after{content:"";position:absolute;border-radius:50%;pointer-events:none;}
+  .seal-ring::before{width:100%;height:100%;border:2px solid var(--gold);opacity:.9;}
+  .seal-ring::after{width:78%;height:78%;border:1.5px solid var(--gold-soft);opacity:.65;}
+
+  .title{text-align:center;font-size:26px;letter-spacing:6px;margin:0 0 6px;text-transform:uppercase;}
+  .subtitle{text-align:center;font-size:14px;letter-spacing:6px;margin:0 0 48px;color:var(--gold-soft);text-transform:uppercase;}
+
+  /* — MANUSCRITE — */
+  .manif{display:flex;justify-content:center;margin-bottom:24px;}
+  .script{
+    font-family:"Parisienne",cursive;
+    font-size:26px;
+    line-height:1.02;
+    text-align:center;
+    color:var(--gold-soft);
+    white-space:pre-line;
+  }
+  .script .line{display:block;}
+  .script .ch{
+    display:inline-block;
+    opacity:0;
+    transform:translateY(1px);
+    filter:blur(.3px);
+    animation:ink .038s ease forwards;
+  }
+  .script .ch.space{width:0.38em;}
+  .script .line + .trace + .line { margin-top:-28px; }
+  .script .line + .trace + .line + .trace + .line { margin-top:-28px; }
+
+  @keyframes ink{
+    0%{opacity:0;transform:translateY(2px);filter:blur(.9px)}
+    100%{opacity:1;transform:translateY(0);filter:blur(.08px)}
+  }
+
+  .trace{position:relative;display:block;height:0;overflow:visible;}
+  .trace::after{
+    content:"";position:absolute;left:0;top:-14px;width:100%;height:2px;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.11) 50%,transparent 100%);
+    filter:blur(.8px);opacity:0;animation:run 2.4s ease forwards;
+  }
+  @keyframes run{0%{transform:translateX(-100%);opacity:.22}100%{transform:translateX(100%);opacity:0}}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .grid .full{grid-column:1 / -1;}
+  label{font-size:12px;letter-spacing:2px;margin-bottom:8px;color:var(--gold-soft);text-transform:uppercase;}
+  input,textarea{
+    width:100%;padding:14px;border:1px solid rgba(220,203,164,.35);
+    background:#0D0D0D;color:#F1EBDD;font-size:16px;
+  }
+  textarea{min-height:112px;}
+  .actions{display:flex;justify-content:center;margin-top:26px;}
+  button{
+    background:linear-gradient(180deg,#EAD9B9 0%,#D6C29A 100%);
+    color:#1A1A1A;border:0;padding:14px 28px;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+  }
+  .notice{color:var(--gold-soft);font-size:13px;margin-top:12px;text-align:center}
+</style>
+</head>
+
+<body>
+<div class="wrap"><div class="card">
+
+  <div class="seal"><div class="seal-ring"><span>EC</span></div></div>
+
+  <h1 class="title">THE ELEVATE CLUB</h1>
+  <h2 class="subtitle">CERCLE PRIVÉ</h2>
+
+  <div class="manif">
+    <div class="script" id="script">
+      <span class="line" data-text="Un espace pour ceux qui avancent vraiment."></span>
+      <span class="trace"></span>
+      <span class="line" data-text="Pas pour paraître. Pas pour impressionner."></span>
+      <span class="trace"></span>
+      <span class="line" data-text="Pour s’élever, ensemble."></span>
+    </div>
+  </div>
+
+  <form id="request">
+    <div class="grid">
+      <div class="full"><label>Votre nom</label><input name="name" required></div>
+      <div><label>Votre ville</label><input name="city" required></div>
+      <div><label>Contact</label><input name="contact" required></div>
+      <div class="full"><label>Trois mots qui vous définissent</label><input name="words" required></div>
+      <div class="full"><label>Optionnel</label><textarea name="note"></textarea></div>
+    </div>
+    <div class="actions"><button type="submit">Demander l’accès</button></div>
+    <div class="notice" id="notice">Les candidatures sont confidentielles et envoyées au comité.</div>
+  </form>
+
+</div></div>
+
+<script>
+/* ✅ Récupère le parrain dans l’URL */
+const PARRAIN = new URLSearchParams(window.location.search).get("parrain") || "NON-DÉFINI";
+
+/* IMPORTANT: la clé Airtable et l'ID de base sont stockés côté serveur (Netlify Functions).
+   Ce fichier ne contient PAS la clé pour des raisons de sécurité. */
+
+async function envoyerVersServeur(data) {
+  try {
+    const resp = await fetch('/.netlify/functions/submit', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    if (!resp.ok) {
+      const txt = await resp.text();
+      console.error('Erreur serveur:', resp.status, txt);
+      document.getElementById('notice').textContent = 'Erreur lors de l’envoi (serveur).';
+      return;
+    }
+    document.getElementById('notice').textContent = 'Candidature envoyée. Merci.';
+  } catch (err) {
+    console.error(err);
+    document.getElementById('notice').textContent = 'Problème réseau — réessaye.';
+  }
+}
+
+document.getElementById('request').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = {
+    name: e.target.name.value.trim(),
+    city: e.target.city.value.trim(),
+    contact: e.target.contact.value.trim(),
+    words: e.target.words.value.trim(),
+    note: e.target.note.value.trim(),
+    parrain: PARRAIN
+  };
+
+  await envoyerVersServeur(data);
+  e.target.reset();
+});
+
+/* — Animation stylo — */
+(function(){
+  const script=document.getElementById('script');const lines=script.querySelectorAll('.line');
+  let base=0;const speed=38;
+  lines.forEach(line=>{
+    const text=line.dataset.text;line.textContent='';
+    [...text].forEach((ch,i)=>{
+      const span=document.createElement('span');
+      span.className = ch===' ' ? 'ch space' : 'ch';
+      span.textContent=ch;
+      span.style.animationDelay=(base+i*speed)+'ms';
+      line.appendChild(span);
+    });
+    const trace=line.nextElementSibling;
+    const duration=text.length*speed+420;
+    if(trace){trace.style.animationDuration=duration+'ms';trace.style.animationDelay=base+'ms';}
+    base+=duration+120;
+  });
+})();
+</script>
+
+</body>
+</html>
