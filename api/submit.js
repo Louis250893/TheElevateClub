@@ -1,9 +1,8 @@
 export default async function handler(req, res) {
   // Autoriser l'accès depuis ton site GitHub Pages
-  res.setHeader("Access-Control-Allow-Origin", "https://louis250893.github.io");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
+res.setHeader("Access-Control-Allow-Origin", "https://louis250893.github.io");
+res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
