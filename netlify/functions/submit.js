@@ -1,6 +1,11 @@
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Méthode non autorisée" });
+  // Autoriser la connexion depuis ton site
+  res.setHeader("Access-Control-Allow-Origin", "https://louis250893.github.io");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
   const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
@@ -31,5 +36,5 @@ export default async function handler(req, res) {
   });
 
   const result = await response.json();
-  res.status(response.status).json(result);
+  return res.status(response.status).json(result);
 }
