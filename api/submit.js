@@ -13,15 +13,15 @@ export default async function handler(req, res) {
     const baseId = process.env.AIRTABLE_BASE_ID;
     const apiKey = process.env.AIRTABLE_API_KEY;
 
-    const resp = await fetch(`https://api.airtable.com/v0/${baseId}/Sélection Entrante`, {
+    const airtableResp = await fetch(`https://api.airtable.com/v0/${baseId}/Sélection Entrante`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        fields: {
-          "Nom": nom,
+        "fields": {
+          "Name": nom,
           "Ville": city,
           "Contact": contact,
           "Trois mots": words,
@@ -31,12 +31,15 @@ export default async function handler(req, res) {
       })
     });
 
-    const data = await resp.json();
+    if (!airtableResp.ok) {
+      const errorTxt = await airtableResp.text();
+      console.error("Erreur Airtable:", airtableResp.status, errorTxt);
+      return res.status(500).send("Erreur Airtable");
+    }
 
-    return res.status(200).json({ ok: true, airtable: data });
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Erreur serveur", details: err });
+    return res.status(200).send("OK");
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send("Erreur interne");
   }
 }
