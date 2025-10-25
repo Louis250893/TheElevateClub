@@ -159,11 +159,11 @@ document.getElementById('request').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const data = {
-    name: e.target.name.value.trim(),
+    nom: e.target.name.value.trim(),
     city: e.target.city.value.trim(),
     contact: e.target.contact.value.trim(),
     words: e.target.words.value.trim(),
-    note: e.target.note.value.trim(),
+    optionnel: e.target.note.value.trim(),
     parrain: PARRAIN
   };
 
