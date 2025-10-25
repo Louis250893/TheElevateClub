@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+  // Autoriser l'accès depuis ton site GitHub Pages
   res.setHeader("Access-Control-Allow-Origin", "https://louis250893.github.io");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -8,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, city, contact, words, note, parrain } = req.body;
+    const { name, city, contact, words, optional, parrain } = req.body;
 
     const baseId = process.env.AIRTABLE_BASE_ID;
     const apiKey = process.env.AIRTABLE_API_KEY;
@@ -16,26 +17,29 @@ export default async function handler(req, res) {
     const airtableResp = await fetch(`https://api.airtable.com/v0/${baseId}/Sélection Entrante`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         fields: {
-          "Nom": name,
+          "Name": name,
           "Ville": city,
           "Contact": contact,
           "Trois mots": words,
-          "Optionnel": note,
+          "Optionnel": optional,
           "Parrain": parrain
         }
       })
     });
 
-    const result = await airtableResp.json();
-    return res.status(200).json(result);
+    if (!airtableResp.ok) {
+      const txt = await airtableResp.text();
+      return res.status(500).json({ error: txt });
+    }
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Erreur serveur" });
+    return res.status(200).json({ success: true });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.toString() });
   }
 }
