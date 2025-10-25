@@ -136,11 +136,12 @@ const PARRAIN = new URLSearchParams(window.location.search).get("parrain") || "N
 
 async function envoyerVersServeur(data) {
   try {
-    const resp = await fetch('https://the-elevate-club.vercel.app/api/submit', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
+    const resp = await fetch("https://the-elevate-club.vercel.app/api/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+});
+
     if (!resp.ok) {
       const txt = await resp.text();
       console.error('Erreur serveur:', resp.status, txt);
