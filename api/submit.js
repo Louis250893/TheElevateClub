@@ -1,10 +1,16 @@
 export default async function handler(req, res) {
-  // Autoriser l'accès depuis ton site GitHub Pages
-res.setHeader("Access-Control-Allow-Origin", "https://louis250893.github.io");
-res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  // CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Répondre à la pré-requête (OPTIONS)
   if (req.method === "OPTIONS") {
     return res.status(200).end();
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Only POST allowed" });
   }
 
   try {
@@ -26,19 +32,17 @@ res.setHeader("Access-Control-Allow-Headers", "Content-Type");
           "Contact": contact,
           "Trois mots": words,
           "Optionnel": optional,
-          "Parrain": parrain
-        }
-      })
+          "Parrain": parrain,
+        },
+      }),
     });
 
-    if (!airtableResp.ok) {
-      const txt = await airtableResp.text();
-      return res.status(500).json({ error: txt });
-    }
+    const data = await airtableResp.json();
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, data });
 
-  } catch (error) {
-    return res.status(500).json({ error: error.toString() });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
   }
 }
