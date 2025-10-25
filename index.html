@@ -136,7 +136,7 @@ const PARRAIN = new URLSearchParams(window.location.search).get("parrain") || "N
 
 async function envoyerVersServeur(data) {
   try {
-    const resp = await fetch("https://the-elevate-club.vercel.app/api/submit", {
+    const resp = await fetch("/api/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
