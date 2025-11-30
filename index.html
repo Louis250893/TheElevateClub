@@ -1,155 +1,481 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Elevate Club</title>
 
-<title>The Elevate Club</title>
+  <!-- Icônes et PWA -->
+  <link rel="icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
 
-<!-- Favicon + App Icons -->
-<link rel="icon" href="favicon.ico" />
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="manifest" href="manifest.json">
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Allura&display=swap"
+    rel="stylesheet"
+  />
 
-<style>
-/* ----- RESET ----- */
-body, html {
-  margin: 0;
-  padding: 0;
-  background: #000000;
-  font-family: "Didot", serif;
-  color: white;
-  text-align: center;
-}
+  <style>
+    :root {
+      --gold: #f4d48a;
+      --gold-soft: #d6b676;
+      --bg: #050505;
+      --text: #f5f5f5;
+      --text-soft: #d6d6d6;
+      --error: #ff6b6b;
+      --success: #9be77a;
+      --accent-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+    }
 
-/* ----- LOGO ----- */
-#logo3d {
-  width: 180px; /* Taille M */
-  margin-top: 60px;
-  animation: rotate3D 6s linear infinite;
-  transform-style: preserve-3d;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-@keyframes rotate3D {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(360deg); }
-}
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      background: radial-gradient(circle at top, #121212 0, #050505 55%, #000 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* ----- TEXTE D’INTRO ----- */
-.slogan {
-  font-size: 18px;
-  margin-top: 30px;
-  line-height: 1.4;
-  font-weight: 300;
-  opacity: 0.85;
-}
+    .wrap {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
 
-/* ----- FORMULAIRE ----- */
-form {
-  width: 90%;
-  max-width: 420px;
-  margin: 40px auto;
-  text-align: left;
-}
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: linear-gradient(145deg, #050505, #101010);
+      border-radius: 22px;
+      border: 1px solid rgba(244, 212, 138, 0.08);
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+      padding: 24px 20px 28px;
+    }
 
-label {
-  font-size: 14px;
-  opacity: 0.85;
-}
+    @media (min-width: 600px) {
+      .card {
+        padding: 32px 32px 36px;
+      }
+    }
 
-input, textarea {
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: 18px;
-  padding: 12px;
-  background: #111;
-  border: 1px solid #444;
-  border-radius: 6px;
-  color: white;
-  outline: none;
-}
+    /* -------- Logo 3D “pièce” qui tourne -------- */
 
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  background: #C6A66A; /* Or chaud premium */
-  border: none;
-  border-radius: 6px;
-  color: #000;
-  font-weight: bold;
-  letter-spacing: 0.8px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+    .logo-wrapper {
+      width: min(230px, 60vw);
+      height: min(230px, 60vw);
+      margin: 12px auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+    }
 
-button:hover {
-  background: #e7c98d;
-}
-</style>
+    .logo-coin {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;              /* masque le carré → on ne voit que le cercle */
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--accent-shadow);
+      transform-style: preserve-3d;
+      animation: coin-spin 6s linear infinite;
+    }
+
+    .logo-coin img {
+      width: 93%;
+      height: 93%;
+      object-fit: cover;
+      display: block;
+      transform: translateZ(9px);    /* léger relief vers l’écran */
+    }
+
+    /* Bord doré / épaisseur */
+    .logo-coin::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 120, 0.35),
+        0 0 16px rgba(0, 0, 0, 0.9);
+      background:
+        radial-gradient(circle at 30% 20%,
+          rgba(255, 255, 255, 0.45),
+          transparent 60%),
+        radial-gradient(circle at 70% 80%,
+          rgba(140, 90, 10, 0.95),
+          rgba(20, 12, 3, 1) 70%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    /* Reflet léger */
+    .logo-coin::after {
+      content: "";
+      position: absolute;
+      inset: -8%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 15% 0%,
+        rgba(255, 255, 255, 0.4),
+        transparent 55%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Toujours un peu incliné pour ne jamais être à plat / en simple trait */
+    @keyframes coin-spin {
+      from {
+        transform: rotateY(0deg) rotateX(18deg);
+      }
+      to {
+        transform: rotateY(360deg) rotateX(18deg);
+      }
+    }
+
+    /* -------- Titre & phrase manuscrite animée -------- */
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--gold-soft);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 18px;
+    }
+
+    .tagline-wrapper {
+      margin: 0 auto 26px;
+      max-width: 480px;
+    }
+
+    .tagline-label {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 4px;
+    }
+
+    .tagline {
+      min-height: 3.5em;
+      text-align: center;
+      font-family: "Allura", cursive;
+      font-size: 24px;
+      line-height: 1.45;
+      letter-spacing: 0.03em;
+      color: var(--gold);
+      white-space: pre-line;
+    }
+
+    /* Curseur d’écriture */
+    .tagline::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      margin-left: 4px;
+      background: var(--gold);
+      animation: caret 0.7s steps(1) infinite;
+      vertical-align: -0.05em;
+    }
+
+    @keyframes caret {
+      0%, 49%   { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* -------- Formulaire -------- */
+
+    form {
+      margin-top: 6px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: var(--text-soft);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(8, 8, 8, 0.92);
+      color: var(--text);
+      padding: 10px 11px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(244, 212, 138, 0.8);
+      box-shadow: 0 0 0 1px rgba(244, 212, 138, 0.3),
+                  0 0 18px rgba(244, 212, 138, 0.25);
+      background: #080808;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 20px;
+      margin-top: 8px;
+      font-size: 15px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 500;
+      background: radial-gradient(circle at 30% 0%, #ffeab0, #d7aa5b 45%, #b18237 100%);
+      color: #201509;
+      cursor: pointer;
+      box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
+    button[type="submit"]:active {
+      transform: translateY(0);
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .notice {
+      margin-top: 10px;
+      min-height: 1.5em;
+      font-size: 13px;
+      text-align: center;
+      color: var(--text-soft);
+    }
+
+    .notice.error {
+      color: var(--error);
+    }
+
+    .notice.success {
+      color: var(--success);
+    }
+
+    .footnote {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 18px;
+        letter-spacing: 0.22em;
+      }
+      .subtitle {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+      }
+      .tagline {
+        font-size: 21px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="card">
+      <!-- Logo 3D tournant -->
+      <div class="logo-wrapper">
+        <div class="logo-coin">
+          <!-- image carré 1024x1024 : logo.png -->
+          <img src="logo.png" alt="The Elevate Club" />
+        </div>
+      </div>
 
-<img id="logo3d" src="logo.png" alt="The Elevate Club">
+      <h1>THE ELEVATE CLUB</h1>
+      <div class="subtitle">Cercle privé</div>
 
-<div class="slogan">
-  Un espace pour ceux qui avancent vraiment.<br>
-  Pas pour paraître. Pas pour impressionner.<br>
-  Pour s’élever, ensemble.
-</div>
+      <!-- Texte manuscrit animé -->
+      <div class="tagline-wrapper">
+        <div class="tagline-label">Manifeste</div>
+        <p
+          id="tagline"
+          class="tagline"
+          data-text="Un espace pour ceux qui avancent vraiment.^Pas pour paraître. Pas pour impressionner.^Pour s’élever, ensemble."
+        ></p>
+      </div>
 
-<form id="elevateForm">
-  <label>Votre nom</label>
-  <input type="text" name="name" required>
+      <!-- Formulaire de demande d’accès -->
+      <form id="request">
+        <div class="field">
+          <label for="name">Votre nom</label>
+          <input id="name" name="name" autocomplete="name" required />
+        </div>
 
-  <label>Votre ville</label>
-  <input type="text" name="city" required>
+        <div class="field">
+          <label for="city">Votre ville</label>
+          <input id="city" name="city" autocomplete="address-level2" required />
+        </div>
 
-  <label>Contact (email / téléphone)</label>
-  <input type="text" name="contact" required>
+        <div class="field">
+          <label for="contact">Contact (email / téléphone)</label>
+          <input id="contact" name="contact" autocomplete="email" required />
+        </div>
 
-  <label>Trois mots qui vous définissent</label>
-  <input type="text" name="words" required>
+        <div class="field">
+          <label for="words">Trois mots qui vous définissent</label>
+          <input id="words" name="words" placeholder="Stratégique, curieux, loyal…" />
+        </div>
 
-  <label>Optionnel (note, précision, recommandation)</label>
-  <textarea name="note" rows="3"></textarea>
+        <div class="field">
+          <label for="note">Optionnel (note, précision, recommandation)</label>
+          <textarea id="note" name="note" rows="3"></textarea>
+        </div>
 
-  <button type="submit">DEMANDER L’ACCÈS</button>
-</form>
+        <button type="submit">Demander l’accès</button>
 
-<script>
-// Récupération éventuelle du parrain
-const urlParams = new URLSearchParams(window.location.search);
-const PARRAIN = urlParams.get("parrain") ?? "NON-DÉFINI";
+        <div id="notice" class="notice"></div>
+      </form>
 
-// Envoi Airtable via Vercel API
-document.getElementById("elevateForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+      <div class="footnote">
+        Invitation personnelle.&nbsp; Les réponses sont lues une à une.
+      </div>
+    </div>
+  </div>
 
-  const data = {
-    nom: e.target.name.value.trim(),
-    city: e.target.city.value.trim(),
-    contact: e.target.contact.value.trim(),
-    words: e.target.words.value.trim(),
-    optionnel: e.target.note.value.trim(),
-    parrain: PARRAIN
-  };
+  <script>
+    /* --- Récupère le parrain dans l’URL --- */
+    const PARRAIN =
+      new URLSearchParams(window.location.search).get("parrain") || "NON-DÉFINI";
 
-  const resp = await fetch("/api/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+    /* --- Animation manuscrite du manifeste --- */
+    (function () {
+      const el = document.getElementById("tagline");
+      if (!el) return;
 
-  if (resp.ok) {
-    alert("✅ Candidature envoyée. Nous reviendrons vers vous.");
-    e.target.reset();
-  } else {
-    alert("❌ Erreur, réessayez dans un instant.");
-  }
-});
-</script>
+      const raw = el.dataset.text || "";
+      const parts = raw.split("^"); // ^ = retour à la ligne
+      const fullText = parts.join("\n");
+      let i = 0;
 
+      el.textContent = "";
+
+      function type() {
+        if (i <= fullText.length) {
+          el.textContent = fullText.slice(0, i);
+          i++;
+          setTimeout(type, 40); // vitesse d’écriture
+        }
+      }
+
+      window.addEventListener("load", type);
+    })();
+
+    /* --- Envoi vers le serveur (Vercel → Airtable) --- */
+    async function envoyerVersServeur(data) {
+      const notice = document.getElementById("notice");
+      notice.classList.remove("error", "success");
+      notice.textContent = "Envoi en cours…";
+
+      try {
+        const resp = await fetch("/api/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (!resp.ok) {
+          const txt = await resp.text();
+          console.error("Erreur serveur:", resp.status, txt);
+          notice.classList.add("error");
+          notice.textContent = "Erreur lors de l’envoi (serveur).";
+          return;
+        }
+
+        notice.classList.add("success");
+        notice.textContent = "Candidature envoyée. Merci.";
+      } catch (err) {
+        console.error(err);
+        notice.classList.add("error");
+        notice.textContent = "Problème réseau — réessaye.";
+      }
+    }
+
+    /* --- Gestion du formulaire --- */
+    document
+      .getElementById("request")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+          name: e.target.name.value.trim(),
+          city: e.target.city.value.trim(),
+          contact: e.target.contact.value.trim(),
+          words: e.target.words.value.trim(),
+          note: e.target.note.value.trim(),
+          parrain: PARRAIN,
+        };
+
+        await envoyerVersServeur(data);
+        e.target.reset();
+      });
+  </script>
 </body>
 </html>
+
