@@ -137,8 +137,8 @@
       white-space: pre-line;
     }
 
-    /* Curseur d’écriture (inchangé) */
-    .tagline::after {
+    /* Curseur d’écriture : seulement quand la classe .caret est présente */
+    .tagline.caret::after {
       content: "";
       display: inline-block;
       width: 2px;
@@ -340,7 +340,7 @@
     const PARRAIN =
       new URLSearchParams(window.location.search).get("parrain") || "NON-DÉFINI";
 
-    /* --- Animation manuscrite du manifeste --- */
+    /* --- Animation manuscrite du manifeste (avec curseur qui disparaît à la fin) --- */
     (function () {
       const el = document.getElementById("tagline");
       if (!el) return;
@@ -350,6 +350,8 @@
       const fullText = parts.join("\n");
       let i = 0;
 
+      // On active le curseur au début
+      el.classList.add("caret");
       el.textContent = "";
 
       function type() {
@@ -357,6 +359,9 @@
           el.textContent = fullText.slice(0, i);
           i++;
           setTimeout(type, 40); // vitesse d’écriture
+        } else {
+          // Animation terminée → on supprime le curseur
+          el.classList.remove("caret");
         }
       }
 
