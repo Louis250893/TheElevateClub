@@ -1,5 +1,7 @@
-export default async function handler(req, res) {
-  // CORS pour autoriser l'appel depuis ton site (GitHub / Vercel)
+// api/submit.js – fonction Vercel → Airtable
+
+module.exports = async (req, res) => {
+  // CORS (pour que ton formulaire puisse appeler l’API)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -8,47 +10,58 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  // 🔐 Variables d'environnement (NE PAS METTRE DE CLÉ ICI)
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const apiKey = process.env.AIRTABLE_API_KEY;
+
+  if (!baseId || !apiKey) {
+    console.error("Config Airtable manquante", {
+      baseIdPresent: !!baseId,
+      apiKeyPresent: !!apiKey,
+    });
+    return res.status(500).send("Configuration serveur incomplète.");
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Méthode non autorisée" });
+  }
+
   try {
-    const { name, city, contact, words, note, parrain } = req.body;
+    const { name, city, contact, words, note, parrain } = req.body || {};
 
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const apiKey = process.env.AIRTABLE_API_KEY;
+    const tableName = "Sélection Entrante";
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(
+      tableName
+    )}`;
 
-    if (!baseId || !apiKey) {
-      console.error("AIRTABLE_BASE_ID ou AIRTABLE_API_KEY manquant");
-      return res.status(500).send("Configuration serveur manquante");
-    }
-
-    const airtableResp = await fetch(
-      https://api.airtable.com/v0/${baseId}/Sélection Entrante,
-      {
-        method: "POST",
-        headers: {
-          Authorization: Bearer ${apiKey},
-          "Content-Type": "application/json",
+    const airtableResp = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: Bearer ${apiKey},
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fields: {
+          Name: name || "",
+          Ville: city || "",
+          Contact: contact || "",
+          "Trois mots": words || "",
+          Optionnel: note || "",
+          Parrain: parrain || "",
         },
-        body: JSON.stringify({
-          fields: {
-            "Name": name || "",
-            "Ville": city || "",
-            "Contact": contact || "",
-            "Trois mots": words || "",
-            "Optionnel": note || "",
-            "Parrain": parrain || "",
-          },
-        }),
-      }
-    );
+      }),
+    });
 
     if (!airtableResp.ok) {
-      const txt = await airtableResp.text();
-      console.error("Airtable error:", airtableResp.status, txt);
-      return res.status(500).send("Erreur Airtable");
+      const text = await airtableResp.text();
+      console.error("Erreur Airtable:", airtableResp.status, text);
+      return res.status(500).send("Erreur lors de l’envoi vers Airtable.");
     }
 
-    return res.status(200).json({ ok: true });
+    const data = await airtableResp.json();
+    return res.status(200).json({ ok: true, id: data.id || null });
   } catch (err) {
-    console.error("Server error:", err);
-    return res.status(500).send("Erreur serveur");
+    console.error("Erreur serveur:", err);
+    return res.status(500).send("Erreur serveur interne.");
   }
-}
+};
