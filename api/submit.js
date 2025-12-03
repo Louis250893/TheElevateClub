@@ -8,28 +8,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { nom, city, contact, words, optionnel, parrain } = req.body;
+    const { name, city, contact, words, note, parrain } = req.body;
 
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const apiKey = process.env.AIRTABLE_API_KEY;
+// …
 
-    const airtableResp = await fetch(`https://api.airtable.com/v0/${baseId}/Sélection Entrante`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
+const airtableResp = await fetch(
+  `https://api.airtable.com/v0/${baseId}/Sélection Entrante`,
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fields: {
+        "Name": name || "",
+        "Ville": city || "",
+        "Contact": contact || "",
+        "Trois mots": words || "",
+        "Optionnel": note || "",
+        "Parrain": parrain || "",
       },
-      body: JSON.stringify({
-        "fields": {
-          "Name": nom,
-          "Ville": city,
-          "Contact": contact,
-          "Trois mots": words,
-          "Optionnel": optionnel,
-          "Parrain": parrain
-        }
-      })
-    });
+    }),
+  }
+);
+
 
     if (!airtableResp.ok) {
       const errorTxt = await airtableResp.text();
