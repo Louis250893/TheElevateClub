@@ -75,82 +75,21 @@
       }
     }
 
-    /* -------- Logo 3D “pièce” qui tourne -------- */
+    /* -------- Logo fixe transparent -------- */
 
     .logo-wrapper {
-      width: min(230px, 60vw);
-      height: min(230px, 60vw);
+      width: 100%;
       margin: 12px auto 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      perspective: 1200px;
     }
 
-    .logo-coin {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      overflow: hidden;              /* masque le carré → on ne voit que le cercle */
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--accent-shadow);
-      transform-style: preserve-3d;
-      animation: coin-spin 6s linear infinite;
-    }
-
-    .logo-coin img {
-      width: 93%;
-      height: 93%;
-      object-fit: cover;
+    .logo-wrapper img {
+      width: min(230px, 60vw);
+      height: auto;
       display: block;
-      transform: translateZ(9px);    /* léger relief vers l’écran */
-    }
-
-    /* Bord doré / épaisseur */
-    .logo-coin::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      box-shadow:
-        0 0 0 2px rgba(255, 215, 120, 0.35),
-        0 0 16px rgba(0, 0, 0, 0.9);
-      background:
-        radial-gradient(circle at 30% 20%,
-          rgba(255, 255, 255, 0.45),
-          transparent 60%),
-        radial-gradient(circle at 70% 80%,
-          rgba(140, 90, 10, 0.95),
-          rgba(20, 12, 3, 1) 70%);
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    /* Reflet léger */
-    .logo-coin::after {
-      content: "";
-      position: absolute;
-      inset: -8%;
-      border-radius: 50%;
-      background: radial-gradient(circle at 15% 0%,
-        rgba(255, 255, 255, 0.4),
-        transparent 55%);
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    /* Toujours un peu incliné pour ne jamais être à plat / en simple trait */
-    @keyframes coin-spin {
-      from {
-        transform: rotateY(0deg) rotateX(18deg);
-      }
-      to {
-        transform: rotateY(360deg) rotateX(18deg);
-      }
+      filter: drop-shadow(0 18px 45px rgba(0, 0, 0, 0.9));
     }
 
     /* -------- Titre & phrase manuscrite animée -------- */
@@ -198,7 +137,7 @@
       white-space: pre-line;
     }
 
-    /* Curseur d’écriture */
+    /* Curseur d’écriture (inchangé) */
     .tagline::after {
       content: "";
       display: inline-block;
@@ -294,7 +233,7 @@
     button[type="submit"]:active {
       transform: translateY(0);
       box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.8),
+        0 8px 25px rgba(0, 0, 0, 0.😎,
         0 0 0 1px rgba(255, 255, 255, 0.12);
     }
 
@@ -340,12 +279,9 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <!-- Logo 3D tournant -->
+      <!-- Logo fixe -->
       <div class="logo-wrapper">
-        <div class="logo-coin">
-          <!-- image carré 1024x1024 : logo.png -->
-          <img src="logo.png" alt="The Elevate Club" />
-        </div>
+        <img src="logo.png" alt="The Elevate Club" />
       </div>
 
       <h1>THE ELEVATE CLUB</h1>
@@ -478,4 +414,3 @@
   </script>
 </body>
 </html>
-
