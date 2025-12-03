@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Elevate Club – Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --gold: #f4d48a;
+      --gold-soft: #d6b676;
+      --bg: #050505;
+      --text: #f5f5f5;
+      --text-soft: #d6d6d6;
+      --error: #ff6b6b;
+      --success: #9be77a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      background: radial-gradient(circle at top, #121212 0, #050505 55%, #000 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 900px;
+      background: linear-gradient(145deg, #050505, #101010);
+      border-radius: 22px;
+      border: 1px solid rgba(244, 212, 138, 0.15);
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+      padding: 24px 20px 28px;
+    }
+
+    @media (min-width: 600px) {
+      .card {
+        padding: 28px 26px 32px;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: var(--gold-soft);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 18px;
+    }
+
+    .login {
+      max-width: 360px;
+      margin: 0 auto 22px;
+      text-align: center;
+    }
+
+    .login label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-soft);
+    }
+
+    .login input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(8, 8, 8, 0.9);
+      color: var(--text);
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+      text-align: center;
+    }
+
+    .login input:focus {
+      border-color: rgba(244, 212, 138, 0.8);
+      box-shadow: 0 0 0 1px rgba(244, 212, 138, 0.3);
+    }
+
+    .login button {
+      margin-top: 10px;
+      padding: 8px 22px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: radial-gradient(circle at 30% 0%, #ffeab0, #d7aa5b 45%, #b18237 100%);
+      color: #201509;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+    }
+
+    .login button:hover {
+      filter: brightness(1.05);
+    }
+
+    .login-message {
+      margin-top: 8px;
+      font-size: 13px;
+      min-height: 1.2em;
+      color: var(--text-soft);
+    }
+
+    .login-message.error {
+      color: var(--error);
+    }
+
+    .table-wrap {
+      margin-top: 18px;
+      max-height: 60vh;
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.65);
+      display: none; /* caché tant qu'on n'est pas connecté */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: rgba(5, 5, 5, 0.98);
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+      text-align: left;
+      white-space: nowrap;
+      z-index: 1;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 212, 138, 0.35);
+      font-size: 11px;
+      color: rgba(244, 212, 138, 0.9);
+    }
+
+    .small {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .footnote {
+      margin-top: 14px;
+      font-size: 11px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>THE ELEVATE CLUB</h1>
+      <div class="subtitle">Admin – Candidatures</div>
+
+      <div class="login">
+        <label for="adminCode">Code d’accès admin</label>
+        <input
+          id="adminCode"
+          type="password"
+          placeholder="Votre code secret"
+        />
+        <button id="loginBtn">Se connecter</button>
+        <div id="loginMessage" class="login-message"></div>
+      </div>
+
+      <div id="tableWrap" class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Ville</th>
+              <th>Contact</th>
+              <th>Trois mots</th>
+              <th>Optionnel</th>
+              <th>Parrain</th>
+              <th>Créé</th>
+            </tr>
+          </thead>
+          <tbody id="rowsBody">
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footnote">
+        Vue interne – non destinée aux membres.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const adminInput = document.getElementById("adminCode");
+    const loginMessage = document.getElementById("loginMessage");
+    const tableWrap = document.getElementById("tableWrap");
+    const rowsBody = document.getElementById("rowsBody");
+
+    let adminToken = null;
+
+    async function chargerCandidatures() {
+      if (!adminToken) return;
+
+      loginMessage.classList.remove("error");
+      loginMessage.textContent = "Chargement des candidatures…";
+
+      try {
+        const resp = await fetch("/api/admin-list", {
+          method: "GET",
+          headers: {
+            "x-admin-token": adminToken,
+          },
+        });
+
+        if (!resp.ok) {
+          if (resp.status === 401) {
+            loginMessage.classList.add("error");
+            loginMessage.textContent = "Code invalide.";
+          } else {
+            loginMessage.classList.add("error");
+            loginMessage.textContent = "Erreur serveur (" + resp.status + ").";
+          }
+          tableWrap.style.display = "none";
+          return;
+        }
+
+        const data = await resp.json();
+        if (!data.ok) {
+          loginMessage.classList.add("error");
+          loginMessage.textContent = "Erreur de réponse.";
+          tableWrap.style.display = "none";
+          return;
+        }
+
+        const rows = data.rows || [];
+        rowsBody.innerHTML = "";
+
+        if (rows.length === 0) {
+          rowsBody.innerHTML =
+            '<tr><td colspan="7" class="small">Aucune candidature pour l’instant.</td></tr>';
+        } else {
+          for (const r of rows) {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+              <td>${r.name || ""}</td>
+              <td>${r.ville || ""}</td>
+              <td class="small">${r.contact || ""}</td>
+              <td class="small">${r.mots || ""}</td>
+              <td class="small">${(r.optionnel || "").replace(/\n/g, "<br>")}</td>
+              <td>${r.parrain ? '<span class="pill">' + r.parrain + "</span>" : ""}</td>
+              <td class="small">${r.createdTime ? new Date(r.createdTime).toLocaleString("fr-BE") : ""}</td>
+            `;
+
+            rowsBody.appendChild(tr);
+          }
+        }
+
+        tableWrap.style.display = "block";
+        loginMessage.textContent = "Candidatures chargées.";
+      } catch (err) {
+        console.error(err);
+        loginMessage.classList.add("error");
+        loginMessage.textContent = "Erreur réseau.";
+        tableWrap.style.display = "none";
+      }
+    }
+
+    loginBtn.addEventListener("click", () => {
+      const code = adminInput.value.trim();
+      if (!code) {
+        loginMessage.classList.add("error");
+        loginMessage.textContent = "Merci d’entrer un code.";
+        return;
+      }
+      adminToken = code;
+      chargerCandidatures();
+    });
+
+    adminInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        loginBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
