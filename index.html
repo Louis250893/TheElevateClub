@@ -2,15 +2,20 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>The Elevate Club</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Elevate Club – Invitation privée</title>
 
-  <!-- Icônes & PWA -->
-  <link rel="icon" href="favicon.ico" />
+  <!-- Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Couleurs navigateur / mobile -->
+  <meta name="theme-color" content="#000000" />
+
+  <!-- Icônes & PWA (fichiers déjà dans ton repo) -->
+  <link rel="icon" type="image/png" href="favicon.ico" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="manifest" href="manifest.json" />
 
-  <!-- Google Fonts -->
+  <!-- Police Playfair & manuscrite (Great Vibes pour l'effet "écriture") -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -20,16 +25,12 @@
 
   <style>
     :root {
-      --bg: #050505;
-      --card-bg: #050505;
-      --text-main: #f5f0eb;
-      --gold: #d7b676;
-      --gold-soft: #b89356;
+      --gold: #e0c07a;
+      --bg: #020202;
+      --text: #f5f5f5;
       --input-bg: #111;
-      --input-border: #444;
-      --input-border-focus: #d7b676;
-      --error: #e57373;
-      --success: #9ccc65;
+      --input-border: #333;
+      --input-focus: #e0c07a;
     }
 
     * {
@@ -40,370 +41,306 @@
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top, #111 0, #050505 45%, #000 100%);
-      color: var(--text-main);
+      height: 100%;
+      width: 100%;
       font-family: "Playfair Display", serif;
-      min-height: 100%;
+      background: radial-gradient(circle at top, #181818 0, #000 55%, #000 100%);
+      color: var(--text);
     }
 
     body {
       display: flex;
-      align-items: stretch;
       justify-content: center;
+      align-items: center;
     }
 
-    .page {
-      min-height: 100vh;
+    .wrap {
       width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 16px;
+      max-width: 900px;
+      padding: 24px 16px 40px;
+      margin: 0 auto;
     }
 
     .card {
-      width: 100%;
-      max-width: 620px;
-      background: radial-gradient(circle at top, #151515 0, #050505 55%, #000 100%);
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 32px 20px 28px;
       border-radius: 18px;
-      border: 1px solid rgba(215, 182, 118, 0.28);
-      box-shadow:
-        0 24px 60px rgba(0, 0, 0, 0.😎,
-        0 0 0 1px rgba(255, 255, 255, 0.02);
-      padding: 32px 22px 28px;
+      background: radial-gradient(circle at top, #101010 0, #050505 60%, #020202 100%);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(224, 192, 122, 0.15);
     }
 
-    @media (min-width: 768px) {
-      .card {
-        padding: 40px 36px 34px;
-      }
-    }
-
-    .logo-wrap {
+    /* LOGO */
+    .logo-wrapper {
       display: flex;
       justify-content: center;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
     }
 
     .logo {
-      width: 180px;
-      height: 180px;
-      max-width: 55vw;
-      max-height: 55vw;
-      object-fit: contain;
-      filter:
-        drop-shadow(0 10px 24px rgba(0, 0, 0, 0.85))
-        drop-shadow(0 0 16px rgba(215, 182, 118, 0.35));
+      width: min(65vw, 260px);
+      height: auto;
+      display: block;
+      image-rendering: auto;
     }
 
-    @media (min-width: 768px) {
-      .logo {
-        width: 210px;
-        height: 210px;
-      }
-    }
-
-    .tagline {
+    /* TEXTE MANUSCRIT ANIMÉ */
+    .slogan-container {
       text-align: center;
-      margin: 0 0 28px;
-      line-height: 1.7;
-      font-size: 1.05rem;
-      color: var(--text-main);
-      min-height: 4.8em; /* pour éviter les sauts pendant l’écriture */
+      margin-bottom: 30px;
+      padding: 0 8px;
+    }
+
+    #slogan {
       font-family: "Great Vibes", cursive;
-      letter-spacing: 0.02em;
+      font-size: clamp(1.5rem, 2.5vw + 0.8rem, 2.3rem);
+      line-height: 1.4;
+      color: var(--gold);
+      max-width: 38rem;
+      margin: 0 auto;
+      white-space: pre-wrap;
+      /* pas de curseur, pas de bordure : du texte normal */
     }
 
-    @media (min-width: 768px) {
-      .tagline {
-        font-size: 1.3rem;
-      }
+    /* FORMULAIRE */
+    form {
+      margin-top: 16px;
     }
 
-    .form-group {
-      margin-bottom: 16px;
+    .field {
+      margin-bottom: 14px;
     }
 
     label {
       display: block;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(245, 240, 235, 0.7);
       margin-bottom: 6px;
+      font-size: 0.85rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(245, 245, 245, 0.85);
     }
 
     input,
     textarea {
       width: 100%;
       padding: 10px 12px;
-      background: var(--input-bg);
-      border-radius: 4px;
+      border-radius: 6px;
       border: 1px solid var(--input-border);
-      color: var(--text-main);
-      font-family: inherit;
+      background: var(--input-bg);
+      color: var(--text);
       font-size: 0.95rem;
+      font-family: inherit;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
 
     input::placeholder,
     textarea::placeholder {
-      color: rgba(255, 255, 255, 0.3);
+      color: rgba(180, 180, 180, 0.7);
+      font-size: 0.9rem;
     }
 
     input:focus,
     textarea:focus {
-      border-color: var(--input-border-focus);
-      box-shadow: 0 0 0 1px rgba(215, 182, 118, 0.4);
-      background: #151515;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 1px rgba(224, 192, 122, 0.55);
+      background: #141414;
     }
 
     textarea {
-      min-height: 90px;
+      min-height: 80px;
       resize: vertical;
     }
 
-    .btn-wrap {
-      margin-top: 16px;
-      display: flex;
-      justify-content: center;
+    .notice {
+      min-height: 1.3em;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: rgba(224, 192, 122, 0.9);
+    }
+
+    /* BOUTON */
+    .actions {
+      margin-top: 10px;
+      text-align: center;
     }
 
     button[type="submit"] {
-      cursor: pointer;
-      border: none;
-      padding: 12px 32px;
-      background: linear-gradient(135deg, #d7b676, #f4e0b0);
-      color: #201408;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      padding: 10px 28px;
       border-radius: 999px;
-      box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(0, 0, 0, 0.4);
-      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
-        filter 0.12s ease-out, background 0.15s ease-out;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.8);
+      background: radial-gradient(circle at 30% 30%, #f8e3a6 0, #f1cb72 32%, #c8953a 65%, #8d5a16 100%);
+      color: #1b1205;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.55);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
     }
 
     button[type="submit"]:hover {
       transform: translateY(-1px);
-      box-shadow:
-        0 16px 36px rgba(0, 0, 0, 0.😎,
-        0 0 0 1px rgba(0, 0, 0, 0.55);
       filter: brightness(1.03);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.65);
     }
 
     button[type="submit"]:active {
       transform: translateY(0);
-      box-shadow:
-        0 8px 20px rgba(0, 0, 0, 0.85),
-        0 0 0 1px rgba(0, 0, 0, 0.7);
-      filter: brightness(0.98);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
     }
 
-    button[type="submit"]:disabled {
-      opacity: 0.65;
-      cursor: default;
-      transform: none;
-      box-shadow:
-        0 6px 18px rgba(0, 0, 0, 0.75),
-        0 0 0 1px rgba(0, 0, 0, 0.5);
-    }
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .card {
+        padding: 22px 16px 22px;
+      }
 
-    .notice {
-      margin-top: 14px;
-      font-size: 0.85rem;
-      text-align: center;
-      min-height: 1.4em;
-      color: rgba(245, 240, 235, 0.75);
-    }
+      label {
+        font-size: 0.78rem;
+      }
 
-    .notice.error {
-      color: var(--error);
-    }
-
-    .notice.success {
-      color: var(--success);
+      input,
+      textarea {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
+  <div class="wrap">
     <div class="card">
-      <div class="logo-wrap">
-        <!-- Ton logo 3D fixe, fond transparent -->
+      <!-- LOGO FIXE -->
+      <div class="logo-wrapper">
+        <!-- Ton fichier PNG transparent doit s'appeler exactement "logo.png" -->
         <img src="logo.png" alt="The Elevate Club" class="logo" />
       </div>
 
-      <!-- Texte manuscrit animé (sans barre clignotante à la fin) -->
-      <p id="tagline" class="tagline"></p>
+      <!-- TEXTE MANUSCRIT ANIMÉ -->
+      <div class="slogan-container">
+        <p id="slogan"></p>
+      </div>
 
-      <form id="request" autocomplete="on" novalidate>
-        <div class="form-group">
+      <!-- MESSAGE D’INFO / ERREUR -->
+      <div id="notice" class="notice"></div>
+
+      <!-- FORMULAIRE -->
+      <form id="request">
+        <div class="field">
           <label for="name">Votre nom</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            autocomplete="name"
-            placeholder="Nom complet"
-          />
+          <input id="name" name="name" type="text" autocomplete="name" required
+            placeholder="Nom complet" />
         </div>
 
-        <div class="form-group">
+        <div class="field">
           <label for="city">Votre ville</label>
-          <input
-            id="city"
-            name="city"
-            type="text"
-            required
-            autocomplete="address-level2"
-            placeholder="Ville"
-          />
+          <input id="city" name="city" type="text" autocomplete="address-level2" required
+            placeholder="Ville où vous vivez" />
         </div>
 
-        <div class="form-group">
+        <div class="field">
           <label for="contact">Contact (email / téléphone)</label>
-          <input
-            id="contact"
-            name="contact"
-            type="text"
-            required
-            autocomplete="email"
-            placeholder="Ex. nom@exemple.com ou +32 4..."
-          />
+          <input id="contact" name="contact" type="text" autocomplete="email"
+            placeholder="ex. nom@example.com ou +32..." required />
         </div>
 
-        <div class="form-group">
+        <div class="field">
           <label for="words">Trois mots qui vous définissent</label>
-          <input
-            id="words"
-            name="words"
-            type="text"
-            required
-            placeholder="Ex. curieux, engagé, déterminé"
-          />
+          <input id="words" name="words" type="text" required
+            placeholder="Par ex. curieux, engagé, généreux" />
         </div>
 
-        <div class="form-group">
+        <div class="field">
           <label for="note">Optionnel (note, précision, recommandation)</label>
-          <textarea
-            id="note"
-            name="note"
-            placeholder="Recommandation, précision, contexte, etc."
-          ></textarea>
+          <textarea id="note" name="note"
+            placeholder="Un mot en plus, une recommandation, un contexte…"></textarea>
         </div>
 
-        <div class="btn-wrap">
-          <button type="submit">
-            DEMANDER L’ACCÈS
-          </button>
+        <div class="actions">
+          <button type="submit">Demander l'accès</button>
         </div>
-
-        <div id="notice" class="notice"></div>
       </form>
     </div>
   </div>
 
   <script>
-    // 1) Texte manuscrit animé (sans curseur clignotant)
-    (function typeTagline() {
-      const text =
-        "Un espace pour ceux qui avancent vraiment.\n" +
-        "Pas pour paraître. Pas pour impressionner.\n" +
-        "Pour s’élever, ensemble.";
-      const el = document.getElementById("tagline");
+    /* -----------------------------------------
+       1) Texte manuscrit qui s'écrit sans curseur
+    ------------------------------------------*/
+    const FULL_SLOGAN =
+      "Un espace pour ceux qui avancent vraiment.\n" +
+      "Pas pour paraître. Pas pour impressionner.\n" +
+      "Pour s'élever, ensemble.";
+
+    function lancerAnimationTexte() {
+      const el = document.getElementById("slogan");
       let i = 0;
 
       function step() {
-        if (i <= text.length) {
-          const current = text.slice(0, i);
-          el.innerHTML = current.replace(/\n/g, "<br>");
+        if (i <= FULL_SLOGAN.length) {
+          el.textContent = FULL_SLOGAN.slice(0, i);
           i++;
-          setTimeout(step, 45); // vitesse d’écriture
+          setTimeout(step, 45); // vitesse d'écriture
         }
       }
 
       step();
-    })();
+    }
 
-    // 2) Récupère le parrain dans l’URL
-    const PARRAIN =
-      new URLSearchParams(window.location.search).get("parrain") || "NON-DÉFINI";
+    /* -----------------------------------------
+       2) Gestion du formulaire + envoi serveur
+       (on garde la même logique que ton submit.js)
+    ------------------------------------------*/
 
-    // 3) Envoi vers le serveur (Vercel) qui parle à Airtable
+    // Récupère le parrain dans l'URL (ex: ?parrain=Prénom)
+    const PARRAIN = new URLSearchParams(window.location.search).get("parrain") || "NON-DÉFINI";
+
     async function envoyerVersServeur(data) {
-      const notice = document.getElementById("notice");
-      notice.className = "notice";
-      notice.textContent = "Envoi en cours…";
-
       try {
-        const resp = await fetch(
-          "https://the-elevate-club-93vs.vercel.app/api/submit",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          }
-        );
+        const resp = await fetch("/api/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
 
         if (!resp.ok) {
           const txt = await resp.text();
           console.error("Erreur serveur:", resp.status, txt);
-          notice.classList.add("error");
-          notice.textContent = "Erreur lors de l’envoi (serveur). Réessaie.";
+          document.getElementById("notice").textContent =
+            "Erreur lors de l’envoi (serveur). Réessaie dans un instant.";
           return;
         }
 
-        notice.classList.add("success");
-        notice.textContent = "Candidature envoyée. Merci.";
+        document.getElementById("notice").textContent = "Candidature envoyée. Merci.";
       } catch (err) {
         console.error(err);
-        notice.classList.add("error");
-        notice.textContent = "Problème réseau – réessaie.";
+        document.getElementById("notice").textContent = "Problème réseau — réessaie.";
       }
     }
 
-    // 4) Gestion du formulaire
-    document
-      .getElementById("request")
-      .addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const notice = document.getElementById("notice");
-        const submitBtn = e.target.querySelector('button[type="submit"]');
+    document.getElementById("request").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-        const data = {
-          name: e.target.name.value.trim(),
-          city: e.target.city.value.trim(),
-          contact: e.target.contact.value.trim(),
-          words: e.target.words.value.trim(),
-          note: e.target.note.value.trim(),
-          parrain: PARRAIN,
-        };
+      const data = {
+        name: e.target.name.value.trim(),
+        city: e.target.city.value.trim(),
+        contact: e.target.contact.value.trim(),
+        words: e.target.words.value.trim(),
+        note: e.target.note.value.trim(),
+        parrain: PARRAIN,
+      };
 
-        if (!data.name || !data.city || !data.contact || !data.words) {
-          notice.className = "notice error";
-          notice.textContent = "Merci de remplir tous les champs obligatoires.";
-          return;
-        }
+      await envoyerVersServeur(data);
+      e.target.reset();
+    });
 
-        submitBtn.disabled = true;
-        await envoyerVersServeur(data);
-        submitBtn.disabled = false;
-
-        // Si succès, on vide le formulaire
-        if (notice.classList.contains("success")) {
-          e.target.reset();
-        }
-      });
+    // Lancer l'animation une fois que la page est chargée
+    window.addEventListener("load", lancerAnimationTexte);
   </script>
 </body>
 </html>
+
